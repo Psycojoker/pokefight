@@ -8,7 +8,7 @@ from moviepy.editor import ImageSequenceClip, CompositeVideoClip
 
 from fight import generate_images, fill_users
 
-REGEX = re.compile("@pokefight ([a-zA-Z.@]+) used (.+) on ([a-zA-Z.@]+),? ?(effective|not effective)?")
+REGEX = re.compile("@pokefight ([a-zA-Z0-9.@_-]+) use[ds]? (.+) (on|at|against) ([a-zA-Z0-9.@_-]+),? ?(effective|not effective)?")
 
 def main():
     if not os.path.exists("bot-fights"):
