@@ -31,8 +31,10 @@ def pixelise(image, side=120, resize_side=40):
 
     for i in range(0, image.size[0]):
         for j in range(0, image.size[1]):
-            if pixel[i, j]:
+            try:
                 pixel[i,j] = tuple(map(_to_16bits, pixel[i, j]))
+            except Exception:
+                pass
 
     return image.convert("P", palette=Image.ADAPTIVE)
 
