@@ -38,6 +38,8 @@ def main():
 
             message = h.handle(status["content"]).strip()
 
+            # here html2text will remove the @domain.com from user@domain.com
+            # because it's hidden in the html, let's reput it
             for mention in status["mentions"]:
                 message = message.replace(mention["username"], mention["acct"], 1)
 
@@ -84,6 +86,12 @@ def main():
             result.save(result_filename)
             print "-> %s %s" % (action_filename, result_filename)
 
+            # mastodon compression/convertion algorithm seems to ignore the
+            # last frame of a gif/mp4 (or at least readuce its duration of
+            # something like 0.1 or 0.01 seconds for some reason
+            # therefor a 2 frames gif looks like a 1 frame gif which sucks
+            # to fix this, we repeat the image sequences several times and
+            # remove the last frame, this seems to fix it (yes, that's ugly)
             CompositeVideoClip([ImageSequenceClip(([action_filename, result_filename]*20)[:-1], fps=(1./2.5))]).write_videofile(mp4_filename, fps=(1/2.5))
 
             mp4_media_post = mastodon.media_post(mp4_filename)
