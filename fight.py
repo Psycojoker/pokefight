@@ -19,9 +19,20 @@ class Player():
         self.level = str(level)
         self.image = image
 
+
 def pixelise(image, side=120, resize_side=40):
+    def _to_16bits(number):
+        return int((((number + 1) / 16) * 16) - 1)
+
     image = image.resize((resize_side, resize_side), Image.NEAREST)
     image = image.resize((side, side), Image.NEAREST)
+
+    pixel = image.load()
+
+    for i in range(0, image.size[0]):
+        for j in range(0, image.size[1]):
+            if pixel[i, j]:
+                pixel[i,j] = tuple(map(_to_16bits, pixel[i, j]))
 
     return image.convert("P", palette=Image.ADAPTIVE)
 
