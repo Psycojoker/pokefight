@@ -64,7 +64,7 @@ def main():
 
                 continue
 
-            attacker, power, defender, effectiveness = match.groups()
+            attacker, power, _, defender, effectiveness = match.groups()
 
             effective = effectiveness in ("effective", None)
 
