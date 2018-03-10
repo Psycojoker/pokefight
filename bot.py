@@ -84,8 +84,13 @@ def main():
 
             mp4_media_post = mastodon.media_post(mp4_filename)
 
+            if i["account"]["acct"] not in (attacker.acct, defender.acct):
+                text = ".@%s used %s on @%s! (from @%s)" % (attacker.acct, power, defender.acct, i["account"]["acct"]),
+            else:
+                text = ".@%s used %s on @%s!" % (attacker.acct, power, defender.acct),
+
             print mastodon.status_post(
-                ".@%s used %s on @%s! (from @%s)" % (attacker.acct, power, defender.acct, i["account"]["acct"]),
+                text,
                 # ".%s used %s on %s! (from @%s)" % (attacker.acct, power, defender.acct, i["account"]["acct"]),
                 in_reply_to_id=status_id,
                 media_ids=[mp4_media_post],
