@@ -4,6 +4,7 @@ import time
 import html2text
 
 from mastodon import Mastodon
+from moviepy.editor import ImageSequenceClip, CompositeVideoClip
 
 from fight import generate_images, fill_users
 
@@ -73,18 +74,21 @@ def main():
 
             action_filename = "bot-fights/" + str(status_id) + "_action.png"
             result_filename = "bot-fights/" + str(status_id) + "_result.png"
+            mp4_filename = "bot-fights/" + str(status_id) + ".mp4"
 
             action.save(action_filename)
             result.save(result_filename)
             print "-> %s %s" % (action_filename, result_filename)
 
-            action_media_post = mastodon.media_post(action_filename)
-            result_media_post = mastodon.media_post(result_filename)
+            CompositeVideoClip([ImageSequenceClip(([action_filename, result_filename]*20)[:-1], fps=(1./2.5))]).write_videofile(mp4_filename, fps=(1/2.5))
+
+            mp4_media_post = mastodon.media_post(mp4_filename)
 
             print mastodon.status_post(
                 ".@%s used %s on @%s! (from @%s)" % (attacker.acct, power, defender.acct, i["account"]["acct"]),
+                # ".%s used %s on %s! (from @%s)" % (attacker.acct, power, defender.acct, i["account"]["acct"]),
                 in_reply_to_id=status_id,
-                media_ids=[action_media_post, result_media_post],
+                media_ids=[mp4_media_post],
                 # don't spam global timeline
                 visibility=visibility if visibility != "public" else "unlisted",
             )["uri"]
