@@ -15,7 +15,6 @@ def main():
         os.makedirs("bot-fights")
 
     h = html2text.HTML2Text()
-    h.ignore_links = True
 
     mastodon = Mastodon(client_id='pokefight.secret', access_token='user_pokefight.secret', api_base_url='https://social.wxcafe.net')
 
@@ -41,7 +40,8 @@ def main():
             # here html2text will remove the @domain.com from user@domain.com
             # because it's hidden in the html, let's reput it
             for mention in status["mentions"]:
-                message = message.replace(mention["username"], mention["acct"], 1)
+                link_re = '\[[^)]+\]\(' + re.escape(mention["url"]) + '\)'
+                message = re.sub(link_re, mention["acct"], message)
 
             print
             # repr to avoid writting on several lines
