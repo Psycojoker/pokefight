@@ -51,7 +51,7 @@ def main():
                 # we ignore status where we aren't directly mentionned
                 continue
 
-            match = REGEX.search(message.lower())
+            match = REGEX.search(re.sub("\s+", " ", message.lower()))
 
             if not match:
                 # answer that you've failed
