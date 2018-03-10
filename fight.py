@@ -77,6 +77,9 @@ def get_user_name_avatar(mastodon, mastodon_name):
 
     account = mastodon.account(local_user_id)
 
+    if "#nobot" in account.note:
+      raise Exception # TODO
+
     return account["username"], account["acct"], account["avatar_static"]
 
 
