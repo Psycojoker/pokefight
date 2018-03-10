@@ -37,6 +37,10 @@ def main():
             since_id = max(since_id, i["id"])
 
             message = h.handle(status["content"]).strip()
+
+            for mention in status["mentions"]:
+                message = message.replace(mention["username"], mention["acct"], 1)
+
             print
             # repr to avoid writting on several lines
             print "[%s] %s" % (i["id"], repr(message))
