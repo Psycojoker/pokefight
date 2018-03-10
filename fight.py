@@ -70,19 +70,22 @@ def get_user_name_avatar(mastodon, mastodon_name):
 def fill_users(mastodon, attacker, defender):
     level = 15
 
-    working_dir = tempfile.mkdtemp()
-    current_directory = os.path.realpath(os.curdir)
-    os.chdir(working_dir)
+    try:
+        working_dir = tempfile.mkdtemp()
+        current_directory = os.path.realpath(os.curdir)
+        os.chdir(working_dir)
 
-    username, acct, avatar_url = get_user_name_avatar(mastodon, attacker)
-    filename, _ = urlretrieve(avatar_url)
-    attacker = Player(username, acct, level, Image.open(filename))
+        username, acct, avatar_url = get_user_name_avatar(mastodon, attacker)
+        filename, _ = urlretrieve(avatar_url)
+        attacker = Player(username, acct, level, Image.open(filename))
 
-    username, acct, avatar_url = get_user_name_avatar(mastodon, defender)
-    filename, _ = urlretrieve(avatar_url)
-    defender = Player(username, acct, level, Image.open(filename))
-
-    os.chdir(current_directory)
+        username, acct, avatar_url = get_user_name_avatar(mastodon, defender)
+        filename, _ = urlretrieve(avatar_url)
+        defender = Player(username, acct, level, Image.open(filename))
+    except Exception as e:
+        raise e
+    finally:
+        os.chdir(current_directory)
 
     return attacker, defender
 

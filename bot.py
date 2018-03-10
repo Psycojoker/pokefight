@@ -7,7 +7,7 @@ from mastodon import Mastodon
 
 from fight import generate_images, fill_users
 
-REGEX = re.compile("@pokefight ([a-zA-Z.@]+) used (.+) on ([a-zA-Z.@]+), (effective|not effective)")
+REGEX = re.compile("@pokefight ([a-zA-Z.@]+) used (.+) on ([a-zA-Z.@]+),? ?(effective|not effective)?")
 
 def main():
     if not os.path.exists("bot-fights"):
@@ -36,6 +36,7 @@ def main():
             since_id = max(since_id, i["id"])
 
             message = h.handle(status["content"]).strip()
+            print
             # repr to avoid writting on several lines
             print "[%s] %s" % (i["id"], repr(message))
 
@@ -48,15 +49,27 @@ def main():
             if not match:
                 # answer that you've failed
                 print "message '%s' didn't matched regex" % message
+                print mastodon.status_post(
+                                           "@%s sorry, I couldn't understand your command :(\n\nPlease send me a message in this form:\n\n    @pokefight user@domain.com used some power on other_user@domain.com\n\nOr:\n\n    @pokefight user@domain.com used some power on other_user@domain.com, not effective\n\nIf you'd like the power to be not effective)" % i["account"]["acct"],
+                    in_reply_to_id=status_id,
+                    visibility="direct",
+                )["uri"]
+
                 continue
 
             attacker, power, defender, effectiveness = match.groups()
 
-            effective = effectiveness == "effective"
+            effective = effectiveness in ("effective", None)
 
-            attacker, defender = fill_users(mastodon, attacker, defender)
+            try:
+                attacker, defender = fill_users(mastodon, attacker, defender)
 
-            action, result = generate_images(attacker, defender, power, text=("It's super-", "effective!") if effective else ("It's not very", "effective..."))
+                action, result = generate_images(attacker, defender, power, text=("It's super-", "effective!") if effective else ("It's not very", "effective..."))
+            except Exception as e:
+                import traceback
+                traceback.print_exc()
+                print e
+                continue
 
             action_filename = "bot-fights/" + str(status_id) + "_action.png"
             result_filename = "bot-fights/" + str(status_id) + "_result.png"
@@ -68,12 +81,13 @@ def main():
             action_media_post = mastodon.media_post(action_filename)
             result_media_post = mastodon.media_post(result_filename)
 
-            mastodon.status_post(
+            print mastodon.status_post(
                 ".%s used %s on %s! (from @%s)" % (attacker.acct, power, defender.acct, i["account"]["acct"]),
                 in_reply_to_id=status_id,
                 media_ids=[action_media_post, result_media_post],
-                visibility=visibility,
-            )
+                # don't spam global timeline
+                visibility=visibility if visibility != "public" else "unlisted",
+            )["uri"]
 
         # open(".since_id", "w").write(str(since_id))
         time.sleep(5)
