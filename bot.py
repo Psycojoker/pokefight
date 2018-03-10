@@ -82,14 +82,14 @@ def main():
             result_media_post = mastodon.media_post(result_filename)
 
             print mastodon.status_post(
-                ".%s used %s on %s! (from @%s)" % (attacker.acct, power, defender.acct, i["account"]["acct"]),
+                ".@%s used %s on @%s! (from @%s)" % (attacker.acct, power, defender.acct, i["account"]["acct"]),
                 in_reply_to_id=status_id,
                 media_ids=[action_media_post, result_media_post],
                 # don't spam global timeline
                 visibility=visibility if visibility != "public" else "unlisted",
             )["uri"]
 
-        # open(".since_id", "w").write(str(since_id))
+        open(".since_id", "w").write(str(since_id))
         time.sleep(5)
 
 
