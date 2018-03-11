@@ -26,3 +26,11 @@ Then:
 Then you need to register the bot on the mastodon by doing (you need an account on a mastodon instance):
 
     ve/bin/python register.py
+
+Then, you can launch the bot with:
+
+    ve/bin/python bot.py
+
+There is also a standalone script that more or less work to generate 2 images offline:
+
+    ve/bin/python fight.py username@domain.com another_user@domain.com "some power"
