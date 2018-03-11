@@ -10,7 +10,7 @@ from moviepy.editor import ImageSequenceClip, CompositeVideoClip
 
 from fight import generate_images, fill_users
 
-REGEX = re.compile("(@pokefight|pokefight|\[@pokefight\]\(https://social.wxcafe.net/users/pokefight\)) ([^ ]+) use[ds]? (.+) (on|at|against) ([^ ]+),? ?(effective|not effective)? (.+)")
+REGEX = re.compile("(@pokefight|pokefight|\[@pokefight\]\(https://social.wxcafe.net/users/pokefight\)) ([^ ]+) use[ds]? (.+) (on|at|against) ([^ ]+),? ?(effective|not effective)? ?(.+)?")
 
 
 def load_config():
@@ -99,20 +99,12 @@ def main():
 
             effective = effectiveness in ("effective", None)
 
-            if effect.startswith("["):
-                print effect, "->", effect.split("(")[1][:-1]
-                effect = effect.split("(")[1][:-1]
+            if not effect:
+                effect = "effective!" if effective else "effective..."
 
             try:
                 attacker, defender = fill_users(mastodon, attacker, defender)
 
-                if effect:
-                    effect = "It's very " + effect
-                else:
-                    if effective:
-                        effect = "effective!"
-                    else:
-                        effect = "effective..."
                 action, result = generate_images(attacker, defender, power, text=("It's super-", effect) if effective else ("It's not very", effect))
             except Exception as e:
                 import traceback
