@@ -71,7 +71,7 @@ def main():
             # repr to avoid writting on several lines
             print "[%s] %s" % (i["id"], repr(message))
 
-            if not message.startswith(("@pokefight", "pokefight", "[@pokefight")):
+            if not message.startswith(("@" + config["bot_nick"], config["bot_nick"], "[@" + config["bot_nick"])):
                 # we ignore status where we aren't directly mentionned
                 continue
 
@@ -81,8 +81,6 @@ def main():
                 # answer that you've failed
                 print "message '%s' didn't matched regex" % message
                 print mastodon.status_post(
-                                           "@%s sorry, I couldn't understand your command :(\n\nPlease send me a message in this form:\n\n    @pokefight user@domain.com used some power on other_user@domain.com\n\nOr:\n\n    @pokefight user@domain.com used some power on other_user@domain.com, not effective\n\nIf you'd like the power to be not effective)" % i["account"]["acct"],
-                    in_reply_to_id=status_id,
                     visibility="direct",
                 )["uri"]
 

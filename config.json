@@ -1,3 +1,4 @@
 {
-    "api_base_url": "https://social.wxcafe.net"
+    "api_base_url": "https://social.wxcafe.net",
+    "bot_nick": "pokefight"
 }

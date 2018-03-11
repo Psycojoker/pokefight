@@ -1,7 +1,9 @@
 import sys
+import json
 from getpass import getpass
 from mastodon import Mastodon
 
+bot_nick = raw_input("Username of the bot (example @pokefight): ").strip().lstrip("@")
 login_email = raw_input("Bot login email (eg: username@domain.com): ").strip()
 
 if "@" not in login_email:
