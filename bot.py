@@ -106,10 +106,12 @@ def main():
 
             _, attacker, power, _, defender, effectiveness, effect = match.groups()
 
+            # [@username](@username@domain.com) -> @username@domain.com
             if attacker.startswith("["):
                 print attacker, "->", attacker.split("(")[1][:-1]
                 attacker = attacker.split("(")[1][:-1]
 
+            # [@username](@username@domain.com) -> @username@domain.com
             if defender.startswith("["):
                 print defender, "->", defender.split("(")[1][:-1]
                 defender = defender.split("(")[1][:-1]
