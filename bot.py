@@ -31,8 +31,6 @@ def main():
     if not os.path.exists("bot-fights"):
         os.makedirs("bot-fights")
 
-    h = html2text.HTML2Text()
-
     config = load_config()
 
     mastodon = Mastodon(
@@ -58,10 +56,10 @@ def main():
 
             since_id = max(since_id, i["id"])
 
-            message = h.handle(status["content"]).strip()
-
             # here html2text will remove the @domain.com from user@domain.com
             # because it's hidden in the html, let's reput it
+            message = html2text.html2text(status["content"]).strip()
+
             for mention in status["mentions"]:
                 link_re = '\[[^)]+\]\(' + re.escape(mention["url"]) + '\)'
                 message = re.sub(link_re, mention["acct"], message)
