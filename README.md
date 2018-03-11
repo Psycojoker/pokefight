@@ -22,3 +22,7 @@ Then:
     cd pokefight
     virtualenv ve
     ve/bin/pip install -r requirements.txt
+
+Then you need to register the bot on the mastodon by doing (you need an account on a mastodon instance):
+
+    ve/bin/python register.py
