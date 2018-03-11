@@ -39,8 +39,8 @@ def main():
     config = load_config()
 
     mastodon = Mastodon(
-        client_id=config['client_id'],
-        access_token=config['access_token'],
+        client_id="pokefight.secret",
+        access_token="user_pokefight.secret"
         api_base_url=config['base_url']
     )
 
