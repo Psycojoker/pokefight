@@ -1,0 +1,5 @@
+html2text
+mastodon.py
+moviepy
+argh
+pillow
