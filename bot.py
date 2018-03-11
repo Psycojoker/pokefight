@@ -13,6 +13,23 @@ from fight import generate_images, fill_users
 REGEX = re.compile("(@pokefight|pokefight|\[@pokefight\]\(https://social.wxcafe.net/users/pokefight\)) ([^ ]+) use[ds]? (.+) (on|at|against) ([^ ]+),? ?(effective|not effective)? ?(.+)?")
 
 
+ERROR_MESSAGE = """\
+@%(user)s sorry, I couldn't understand your command :(
+
+Please send me a message in one of those forms:
+
+    @%(bot_nick)s user@domain.com used some power on other_user@domain.com
+    @%(bot_nick)s user@domain.com used some power on other_user@domain.com, not effective
+    @%(bot_nick)s user@domain.com used some power on other_user@domain.com, some_effect
+
+For eg:
+
+    @%(bot_nick)s user@domain.com used rainbow on other_user@domain.com, GAY
+
+Will produce: "It's super GAY"
+"""
+
+
 def load_config():
     with open("config.json", "r") as config_file:
         try:
@@ -80,7 +97,7 @@ def main():
                 # answer that you've failed
                 print "message '%s' didn't matched regex" % message
                 print mastodon.status_post(
-                   "@%s sorry, I couldn't understand your command :(\n\nPlease send me a message in this form:\n\n    @%s user@domain.com used some power on other_user@domain.com\n\nOr:\n\n    @%s user@domain.com used some power on other_user@domain.com, not effective\n\nIf you'd like the power to be not effective)" % (i["account"]["acct"], config["bot_nick"], config["bot_nick"]),
+                    ERROR_MESSAGE % {"user": i["account"]["acct"], "bot_nick": config["bot_nick"]},
                     in_reply_to_id=status_id,
                     visibility="direct",
                 )["uri"]
