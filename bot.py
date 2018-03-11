@@ -38,7 +38,7 @@ def main():
 
     config = load_config()
 
-    mastodon = Mastodon(client_id=config['bot_id']['client_id'], access_token=config['bot_id']['access_token'], api_base_url=['bot_id']['base_url'])
+    mastodon = Mastodon(client_id=config['bot_id']['client_id'], access_token=config['bot_id']['access_token'], api_base_url=config['bot_id']['base_url'])
 
     if os.path.exists(".since_id") and open(".since_id").read().isdigit():
         since_id = int(open(".since_id").read())
