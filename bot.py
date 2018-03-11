@@ -8,7 +8,7 @@ from moviepy.editor import ImageSequenceClip, CompositeVideoClip
 
 from fight import generate_images, fill_users
 
-REGEX = re.compile("@pokefight ([a-zA-Z0-9.@_-]+) use[ds]? (.+) (on|at|against) ([a-zA-Z0-9.@_-]+),? ?(effective|not effective)?")
+REGEX = re.compile("(@pokefight|pokefight|\[@pokefight\]\(https://social.wxcafe.net/users/pokefight\)) ([^ ]+) use[ds]? (.+) (on|at|against) ([^ ]+),? ?(effective|not effective)?")
 
 def main():
     if not os.path.exists("bot-fights"):
@@ -43,15 +43,17 @@ def main():
                 link_re = '\[[^)]+\]\(' + re.escape(mention["url"]) + '\)'
                 message = re.sub(link_re, mention["acct"], message)
 
+            message = re.sub("\s+", " ", message.lower())
+
             print
             # repr to avoid writting on several lines
             print "[%s] %s" % (i["id"], repr(message))
 
-            if not message.startswith("@pokefight"):
+            if not message.startswith(("@pokefight", "pokefight", "[@pokefight")):
                 # we ignore status where we aren't directly mentionned
                 continue
 
-            match = REGEX.search(re.sub("\s+", " ", message.lower()))
+            match = REGEX.search(message)
 
             if not match:
                 # answer that you've failed
@@ -64,7 +66,15 @@ def main():
 
                 continue
 
-            attacker, power, _, defender, effectiveness = match.groups()
+            _, attacker, power, _, defender, effectiveness = match.groups()
+
+            if attacker.startswith("["):
+                print attacker, "->", attacker.split("(")[1][:-1]
+                attacker = attacker.split("(")[1][:-1]
+
+            if defender.startswith("["):
+                print defender, "->", defender.split("(")[1][:-1]
+                defender = defender.split("(")[1][:-1]
 
             effective = effectiveness in ("effective", None)
 
