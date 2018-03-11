@@ -17,13 +17,15 @@ def load_config():
     # load conf file
     with open("config.json", "r") as config_file:
         try:
-            conf = json.load(config_file)
+            config = json.load(config_file)
         except ValueError as e:
             import traceback
             traceback.print_exc()
             print e
             print "JSON error while loading conf file"
             sys.exit(1)
+
+    return config
 
 
 def main():
