@@ -2,6 +2,8 @@ import os
 import re
 import time
 import html2text
+import json
+import sys
 
 from mastodon import Mastodon
 from moviepy.editor import ImageSequenceClip, CompositeVideoClip
@@ -16,7 +18,22 @@ def main():
 
     h = html2text.HTML2Text()
 
-    mastodon = Mastodon(client_id='pokefight.secret', access_token='user_pokefight.secret', api_base_url='https://social.wxcafe.net')
+    # load conf file
+    try:
+        conf_file = open("config.json", "r")
+        conf_content = conf_file.read()
+        conf_file.close()
+    except IOError:
+        print "IOError while loading conf file"
+        sys.exit(1)
+
+    try:
+        conf = json.loads(conf_content)
+    except ValueError:
+        print "JSON error while loading conf file"
+        sys.exit(1)
+
+    mastodon = Mastodon(client_id=conf['bot_id']['client_id'], access_token=conf['bot_id']['access_token'], api_base_url=['bot_id']['base_url'])
 
     if os.path.exists(".since_id") and open(".since_id").read().isdigit():
         since_id = int(open(".since_id").read())
