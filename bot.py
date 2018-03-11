@@ -39,9 +39,9 @@ def main():
     config = load_config()
 
     mastodon = Mastodon(
-        client_id=config['bot_id']['client_id'],
-        access_token=config['bot_id']['access_token'],
-        api_base_url=config['bot_id']['base_url']
+        client_id=config['client_id'],
+        access_token=config['access_token'],
+        api_base_url=config['base_url']
     )
 
     if os.path.exists(".since_id") and open(".since_id").read().isdigit():

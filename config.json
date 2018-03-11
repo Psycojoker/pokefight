@@ -1,7 +1,5 @@
 {
-    "bot_id": {
-        "base_url": "https://social.wxcafe.net",
-        "client_id": "pokefight.secret",
-        "access_token": "user_pokefight.secret"
-    }
+    "base_url": "https://social.wxcafe.net",
+    "client_id": "pokefight.secret",
+    "access_token": "user_pokefight.secret"
 }
