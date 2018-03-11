@@ -20,7 +20,10 @@ def load_config():
 
     try:
         conf = json.loads(conf_content)
-    except ValueError:
+    except ValueError as e:
+        import traceback
+        traceback.print_exc()
+        print e
         print "JSON error while loading conf file"
         sys.exit(1)
 
