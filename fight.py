@@ -1,5 +1,6 @@
 import os
 import argh
+import shutil
 import tempfile
 
 from urllib import urlretrieve
@@ -99,6 +100,7 @@ def fill_users(mastodon, attacker, defender):
         raise e
     finally:
         os.chdir(current_directory)
+        shutil.rmtree(working_dir, ignore_errors=True)
 
     return attacker, defender
 
