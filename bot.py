@@ -12,12 +12,8 @@ from fight import generate_images, fill_users
 
 REGEX = re.compile("(@pokefight|pokefight|\[@pokefight\]\(https://social.wxcafe.net/users/pokefight\)) ([^ ]+) use[ds]? (.+) (on|at|against) ([^ ]+),? ?(effective|not effective)?")
 
-def main():
-    if not os.path.exists("bot-fights"):
-        os.makedirs("bot-fights")
 
-    h = html2text.HTML2Text()
-
+def load_config():
     # load conf file
     try:
         conf_file = open("config.json", "r")
@@ -33,7 +29,16 @@ def main():
         print "JSON error while loading conf file"
         sys.exit(1)
 
-    mastodon = Mastodon(client_id=conf['bot_id']['client_id'], access_token=conf['bot_id']['access_token'], api_base_url=['bot_id']['base_url'])
+
+def main():
+    if not os.path.exists("bot-fights"):
+        os.makedirs("bot-fights")
+
+    h = html2text.HTML2Text()
+
+    config = load_config()
+
+    mastodon = Mastodon(client_id=config['bot_id']['client_id'], access_token=config['bot_id']['access_token'], api_base_url=['bot_id']['base_url'])
 
     if os.path.exists(".since_id") and open(".since_id").read().isdigit():
         since_id = int(open(".since_id").read())
