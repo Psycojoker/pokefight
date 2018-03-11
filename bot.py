@@ -14,7 +14,6 @@ REGEX = re.compile("(@pokefight|pokefight|\[@pokefight\]\(https://social.wxcafe.
 
 
 def load_config():
-    # load conf file
     with open("config.json", "r") as config_file:
         try:
             config = json.load(config_file)
