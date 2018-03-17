@@ -37,5 +37,5 @@ mastodon.log_in(
 )
 
 with open("config.json", "w") as config:
-    json.dump({"api_base_url": api_base_url, "bot_nick": bot_nick}, config
+    json.dump({"api_base_url": api_base_url, "bot_nick": bot_nick}, config)
     print "Configuration saved in config.json"
