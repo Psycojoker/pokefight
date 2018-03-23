@@ -70,6 +70,7 @@ def main():
             status = i["status"]
             status_id = status["id"]
             visibility = status["visibility"]
+            spoiler_text = status["spoiler_text"]
 
             since_id = max(since_id, i["id"])
 
@@ -159,6 +160,7 @@ def main():
                 # ".%s used %s on %s! (from @%s)" % (attacker.acct, power, defender.acct, i["account"]["acct"]),
                 in_reply_to_id=status_id,
                 media_ids=[mp4_media_post],
+                spoiler_text=spoiler_text,
                 # don't spam global timeline
                 visibility=visibility if visibility != "public" else "unlisted",
             )["uri"]
